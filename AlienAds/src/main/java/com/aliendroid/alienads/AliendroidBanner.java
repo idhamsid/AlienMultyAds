@@ -3,6 +3,7 @@ package com.aliendroid.alienads;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1261,6 +1262,7 @@ public class AliendroidBanner {
 
             @Override
             public void onBannerFailedToLoad(BannerView bannerView, BannerErrorInfo bannerErrorInfo) {
+                Log.i("adslog", "onBannerFailedToLoad: "+bannerErrorInfo.errorMessage);
                 switch (selectAdsBackup) {
                     case "APPLOVIN-D":
                         AdRequest.Builder builder = new AdRequest.Builder();

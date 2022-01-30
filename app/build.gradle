@@ -3,12 +3,12 @@ plugins {
 }
 apply plugin: 'applovin-quality-service'
 applovin {
-    apiKey "boIVrHv-1Wvq3hTS1pLXRWH2qJMvN2cQtLvioF5UKy5tIiT_dv5e2TDoh8XZLFKCcZELvPZZumE5nCPqfrNBtb"
+    apiKey "2JBdXKECywLfuPGMhoemF15NOVvJAfTDZz9Ufpu0xg3GXVAOWCrX8UeenU-Uwpm_7V5bnZJJ9cChEhHEHdPI1B"
 }
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "com.aliendroid.samplealienads"
+        applicationId "com.test.test"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1

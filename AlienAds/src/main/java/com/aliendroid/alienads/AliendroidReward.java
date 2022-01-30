@@ -2,6 +2,7 @@ package com.aliendroid.alienads;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -34,8 +35,9 @@ import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.startapp.sdk.adsbase.StartAppAd;
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 import com.startapp.sdk.adsbase.adlisteners.VideoListener;
-import com.unity3d.ads.IUnityAdsListener;
+import com.unity3d.ads.IUnityAdsShowListener;
 import com.unity3d.ads.UnityAds;
+import com.unity3d.ads.UnityAdsShowOptions;
 
 import java.util.Map;
 import java.util.Set;
@@ -197,34 +199,11 @@ public class AliendroidReward {
                     }
                 });
                 break;
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                    unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
-
-                    }
-                });
-                break;
 
         }
     }
 
-    public static void LoadRewardUnity(Activity activity, String selectBackupAds, String idReward, String idBackupReward) {
+/*    public static void LoadRewardUnity(Activity activity, String selectBackupAds, String idReward, String idBackupReward) {
         UnityAds.addListener(new IUnityAdsListener() {
             @Override
             public void onUnityAdsReady(String placementId) {
@@ -472,7 +451,7 @@ public class AliendroidReward {
                 break;
 
         }
-    }
+    }*/
 
     public static void LoadRewardGoogleAds(Activity activity, String selectBackupAds, String idReward, String idBackupReward) {
         AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
@@ -611,29 +590,6 @@ public class AliendroidReward {
 
                     @Override
                     public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad ad) {
-
-                    }
-                });
-                break;
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                        unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
 
                     }
                 });
@@ -795,29 +751,6 @@ public class AliendroidReward {
                     }
                 });
                 break;
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                        unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
-
-                    }
-                });
-                break;
 
         }
     }
@@ -975,29 +908,6 @@ public class AliendroidReward {
                     }
                 });
                 break;
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                        unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
-
-                    }
-                });
-                break;
 
         }
     }
@@ -1073,10 +983,6 @@ public class AliendroidReward {
 
                                 }
 
-                                @Override
-                                public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                                }
                             }, null, new AppLovinAdDisplayListener() {
                                 @Override
                                 public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1095,9 +1001,27 @@ public class AliendroidReward {
                         rewardedVideo.showAd();
                         break;
                     case "UNITY":
-                        if (UnityAds.isReady (idBackupReward)) {
-                            UnityAds.show (activity, idBackupReward);
-                        }
+                            UnityAds.show(activity, idBackupReward, new UnityAdsShowOptions(), new IUnityAdsShowListener() {
+                                @Override
+                                public void onUnityAdsShowFailure(String s, UnityAds.UnityAdsShowError unityAdsShowError, String s1) {
+
+                                }
+
+                                @Override
+                                public void onUnityAdsShowStart(String s) {
+
+                                }
+
+                                @Override
+                                public void onUnityAdsShowClick(String s) {
+
+                                }
+
+                                @Override
+                                public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
+
+                                }
+                            });
                         break;
                 }
             }
@@ -1228,29 +1152,6 @@ public class AliendroidReward {
 
                     @Override
                     public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad ad) {
-
-                    }
-                });
-                break;
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                        unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
 
                     }
                 });
@@ -1413,30 +1314,6 @@ public class AliendroidReward {
                 });
                 break;
 
-            case "UNITY":
-                UnityAds.addListener(new IUnityAdsListener() {
-                    @Override
-                    public void onUnityAdsReady(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsStart(String placementId) {
-
-                    }
-
-                    @Override
-                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
-                        unlockreward=true;
-                    }
-
-                    @Override
-                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
-
-                    }
-                });
-                break;
-
         }
     }
 
@@ -1487,10 +1364,6 @@ public class AliendroidReward {
 
                             }
 
-                            @Override
-                            public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                            }
                         }, null, new AppLovinAdDisplayListener() {
                             @Override
                             public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1515,9 +1388,7 @@ public class AliendroidReward {
                     }
                     break;
                 case "UNITY":
-                    if (UnityAds.isReady (idBackupReward)) {
                         UnityAds.show (activity, idBackupReward);
-                    }
                     break;
             }
         }
@@ -1569,10 +1440,6 @@ public class AliendroidReward {
 
                             }
 
-                            @Override
-                            public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                            }
                         }, null, new AppLovinAdDisplayListener() {
                             @Override
                             public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1596,9 +1463,7 @@ public class AliendroidReward {
                     }
                     break;
                 case "UNITY":
-                    if (UnityAds.isReady (idBackupReward)) {
                         UnityAds.show (activity, idBackupReward);
-                    }
                     break;
             }
         }
@@ -1652,10 +1517,6 @@ public class AliendroidReward {
 
                             }
 
-                            @Override
-                            public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                            }
                         }, null, new AppLovinAdDisplayListener() {
                             @Override
                             public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1679,9 +1540,7 @@ public class AliendroidReward {
                     }
                     break;
                 case "UNITY":
-                    if (UnityAds.isReady (idBackupReward)) {
                         UnityAds.show (activity, idBackupReward);
-                    }
                     break;
             }
         }
@@ -1712,10 +1571,6 @@ public class AliendroidReward {
 
                 }
 
-                @Override
-                public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                }
             }, null, new AppLovinAdDisplayListener() {
                 @Override
                 public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1761,9 +1616,7 @@ public class AliendroidReward {
                     }
                     break;
                 case "UNITY":
-                    if (UnityAds.isReady (idBackupReward)) {
                         UnityAds.show (activity, idBackupReward);
-                    }
                     break;
             }
         }
@@ -1779,10 +1632,55 @@ public class AliendroidReward {
     }
 
     public static void ShowRewardUnity(Activity activity, String selecBackuptAds, String idReward, String idBackupReward) {
-        if (UnityAds.isReady (idReward)) {
-            UnityAds.show(activity, idReward);
-            LoadRewardUnity(activity,selecBackuptAds,idReward,idBackupReward);
-        }
+        UnityAds.show(activity, idReward, new UnityAdsShowOptions(), new IUnityAdsShowListener() {
+            @Override
+            public void onUnityAdsShowFailure(String s, UnityAds.UnityAdsShowError unityAdsShowError, String s1) {
+                Log.i("adslog", "onUnityAdsShowFailure: "+s+" ads show error "+unityAdsShowError+" s1 "+s1);
+                switch (selecBackuptAds) {
+                    case "GOOGLE-ADS":
+                    case "ADMOB":
+                        if (mRewardedAd != null) {
+                            Activity activityContext = activity;
+                            mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
+                                @Override
+                                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                                    unlockreward = true;
+                                }
+                            });
+                        }
+                        break;
+                    case "APPLOVIN-M":
+                        if (rewardedAd.isReady()) {
+                            rewardedAd.showAd();
+                        }
+                        break;
+                    case "IRON":
+                        IronSource.showRewardedVideo(idBackupReward);
+                        break;
+                    case "STARTAPP":
+                        if (rewardedVideo.isReady()) {
+                            rewardedVideo.showAd();
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onUnityAdsShowStart(String s) {
+
+            }
+
+            @Override
+            public void onUnityAdsShowClick(String s) {
+
+            }
+
+            @Override
+            public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
+
+            }
+        });
+
     }
     public static void ShowRewardStartApp(Activity activity, String selecBackuptAds, String idReward, String idBackupReward) {
         if (rewardedVideo.isReady()) {
@@ -1824,10 +1722,6 @@ public class AliendroidReward {
 
                             }
 
-                            @Override
-                            public void userDeclinedToViewAd(AppLovinAd ad) {
-
-                            }
                         }, null, new AppLovinAdDisplayListener() {
                             @Override
                             public void adDisplayed(AppLovinAd appLovinAd) {
@@ -1859,9 +1753,7 @@ public class AliendroidReward {
                     }
                     break;
                 case "UNITY":
-                    if (UnityAds.isReady (idBackupReward)) {
                         UnityAds.show (activity, idBackupReward);
-                    }
                     break;
             }
         }

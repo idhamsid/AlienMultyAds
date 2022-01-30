@@ -1,7 +1,9 @@
 package com.aliendroid.alienads;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,8 +19,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.applovin.adview.AppLovinAdView;
 import com.applovin.mediation.AppLovinExtras;
 import com.applovin.mediation.ApplovinAdapter;
+import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdFormat;
+import com.applovin.mediation.MaxError;
 import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.nativeAds.MaxNativeAdListener;
+import com.applovin.mediation.nativeAds.MaxNativeAdLoader;
+import com.applovin.mediation.nativeAds.MaxNativeAdView;
 import com.applovin.sdk.AppLovinAdSize;
 import com.applovin.sdk.AppLovinSdkUtils;
 import com.google.ads.mediation.facebook.FacebookAdapter;
@@ -49,7 +56,7 @@ public class AliendroidNative {
     public static Mrec startAppMrec;
     private static NativeAd nativeAd;
     public static BannerView unityBanner;
-
+    public static  MaxNativeAdLoader nativeAdLoader;
     public static void SmallNativeAdmob(Activity activity, String selectAds, String selectAdsBackup, FrameLayout layNative, String nativeId, String idBannerBackup, String Hpk1,
                                         String Hpk2, String Hpk3, String Hpk4, String Hpk5) {
 
@@ -399,8 +406,39 @@ public class AliendroidNative {
 
     }
 
+    public static void MediumNativeApplovin(Activity activity,String selectAds,FrameLayout layNative, String nativeId, String idBackup,int bgColor) {
+
+        nativeAdLoader = new MaxNativeAdLoader( nativeId, activity );
+        nativeAdLoader.setNativeAdListener( new MaxNativeAdListener()
+        {
+            @Override
+            public void onNativeAdLoaded(MaxNativeAdView maxNativeAdView, MaxAd maxAd) {
+                super.onNativeAdLoaded(maxNativeAdView, maxAd);
+                    Log.i("adslog", "onNativeAdLoaded: ");
+                    // Add ad view to view.
+                    layNative.setBackgroundColor(bgColor);
+                    layNative.removeAllViews();
+                    layNative.addView(maxNativeAdView);
+            }
+
+            @Override
+            public void onNativeAdLoadFailed(final String adUnitId, final MaxError error)
+            {
+
+            }
+
+            @Override
+            public void onNativeAdClicked(final MaxAd ad)
+            {
+                // Optional click callback
+            }
+        } );
+
+        nativeAdLoader.loadAd();
+    }
+
     public static void MediumNative(Activity activity, String selectAds, String selectAdsBackup, FrameLayout layNative, String nativeId, String idBannerBackup, String Hpk1,
-                                    String Hpk2, String Hpk3, String Hpk4, String Hpk5) {
+                                    String Hpk2, String Hpk3, String Hpk4, String Hpk5,int bgApplvMax) {
 
         switch (selectAds) {
             case "ADMOB":
@@ -477,12 +515,19 @@ public class AliendroidNative {
                                             public void onAdFailedToLoad(LoadAdError loadAdError) {
                                                 switch (selectAdsBackup) {
                                                     case "APPLOVIN-M": {
-                                                        adViewMax = new MaxAdView(idBannerBackup, MaxAdFormat.MREC, activity);
-                                                        final int widthPx = AppLovinSdkUtils.dpToPx(activity, 300);
-                                                        final int heightPx = AppLovinSdkUtils.dpToPx(activity, 250);
-                                                        adViewMax.setLayoutParams(new ConstraintLayout.LayoutParams(widthPx, heightPx));
-                                                        layNative.addView(adViewMax);
-                                                        adViewMax.loadAd();
+                                                        nativeAdLoader = new MaxNativeAdLoader( nativeId, activity );
+                                                        nativeAdLoader.setNativeAdListener( new MaxNativeAdListener()
+                                                        {
+                                                            @Override
+                                                            public void onNativeAdLoaded(MaxNativeAdView maxNativeAdView, MaxAd maxAd) {
+                                                                super.onNativeAdLoaded(maxNativeAdView, maxAd);
+                                                                // Add ad view to view.
+                                                                layNative.setBackgroundColor(bgApplvMax);
+                                                                layNative.removeAllViews();
+                                                                layNative.addView(maxNativeAdView);
+                                                            }
+                                                        } );
+                                                        nativeAdLoader.loadAd();
                                                         break;
                                                     }
                                                     case "MOPUB":
@@ -527,12 +572,68 @@ public class AliendroidNative {
                 adLoader.loadAd(request);
                 break;
             case "APPLOVIN-M":
-                adViewMax = new MaxAdView(nativeId, MaxAdFormat.MREC, activity);
-                final int widthPx = AppLovinSdkUtils.dpToPx(activity, 300);
-                final int heightPx = AppLovinSdkUtils.dpToPx(activity, 250);
-                adViewMax.setLayoutParams(new ConstraintLayout.LayoutParams(widthPx, heightPx));
-                layNative.addView(adViewMax);
-                adViewMax.loadAd();
+                nativeAdLoader = new MaxNativeAdLoader( nativeId, activity );
+                nativeAdLoader.setNativeAdListener( new MaxNativeAdListener()
+                {
+                    @Override
+                    public void onNativeAdLoadFailed(String s, MaxError maxError) {
+                        super.onNativeAdLoadFailed(s, maxError);
+                        Log.i("adslog", "onNativeAdLoadFailed: "+maxError.getMessage());
+                        AdLoader.Builder builder = new AdLoader.Builder(activity, idBannerBackup);
+                        builder.forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                            @Override
+                            public void onNativeAdLoaded(@NonNull NativeAd nativeAds) {
+
+                                if (nativeAd != null) {
+                                    nativeAd.destroy();
+                                }
+                                nativeAd = nativeAds;
+                                NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
+                                        .inflate(R.layout.admob_big_native, null);
+                                populateNativeAdView(nativeAds, adView);
+                                layNative.removeAllViews();
+                                layNative.addView(adView);
+                            }
+
+                        });
+
+                        VideoOptions videoOptions = new VideoOptions.Builder()
+                                .build();
+
+                        NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                                .setVideoOptions(videoOptions)
+                                .build();
+
+                        builder.withNativeAdOptions(adOptions);
+
+                        Bundle extrasApplovin = new AppLovinExtras.Builder()
+                                .setMuteAudio(true)
+                                .build();
+
+                        Bundle extras = new FacebookExtras()
+                                .setNativeBanner(true)
+                                .build();
+                        AdRequest request = new AdRequest.Builder().addKeyword(Hpk1).addKeyword(Hpk2)
+                                .addKeyword(Hpk3).addKeyword(Hpk4).addKeyword(Hpk5)
+                                .addNetworkExtrasBundle(FacebookAdapter.class, extras)
+                                .addNetworkExtrasBundle(ApplovinAdapter.class, extrasApplovin)
+                                .build();
+                        AdLoader adLoader =
+                                builder
+                                        .build();
+                        adLoader.loadAd(request);
+                    }
+
+                    @Override
+                    public void onNativeAdLoaded(MaxNativeAdView maxNativeAdView, MaxAd maxAd) {
+                        super.onNativeAdLoaded(maxNativeAdView, maxAd);
+                        // Add ad view to view.
+                        layNative.setBackgroundColor(bgApplvMax);
+                        layNative.removeAllViews();
+                        layNative.addView(maxNativeAdView);
+                    }
+                } );
+                nativeAdLoader.loadAd();
                 break;
             case "MOPUB":
 

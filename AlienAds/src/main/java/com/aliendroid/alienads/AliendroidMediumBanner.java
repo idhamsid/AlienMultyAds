@@ -1305,7 +1305,6 @@ public class AliendroidMediumBanner {
             }
         });
         unityBanner.load();
-
     }
 
 }

@@ -29,7 +29,7 @@ public class MyApplication extends Application {
                 .withIncludeBackgroundSessionsInMetrics(true)
                 .withLogLevel(Log.VERBOSE)
                 .withPerformanceMetrics(FlurryPerformance.ALL)
-                .build(this, "9CFC3HDGJYSFTRKJG98N");
+                .build(this, "TVG5P2DHGDW8H6X84DWQ");
         alienOpenAds = new AlienOpenAds(this);
 
 
